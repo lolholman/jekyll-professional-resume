@@ -1,0 +1,3 @@
+## 2024-05-18 - [Missing href drops anchors from tab order]
+**Learning:** Using `<a>` tags for styling or icon alignment without an `href` attribute removes the element from the keyboard navigation tab sequence. This makes interactive elements, like a phone number display, completely inaccessible to screen reader users and keyboard-only navigators. Additionally, missing `tel:` protocols prevent mobile tap-to-call.
+**Action:** Always ensure `<a>` elements used for actions or links have a valid `href`. Use `tel:` for phone numbers to enable mobile dialing and retain tab accessibility.
