@@ -23,35 +23,48 @@ document.addEventListener('DOMContentLoaded', function(){
 
     var contents = document.querySelectorAll('.subject, .item');
 
-    setInterval(function(){
-        var scrollPos = document.documentElement.scrollTop;
-        var wh = window.innerHeight;
-
-        Array.from(tocbox.querySelectorAll('li')).forEach(function(tocItem){
-            tocItem.classList.remove('active');
+    const contentObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('appear');
+                observer.unobserve(entry.target);
+            }
         });
+    }, {
+        rootMargin: '0px 0px 0px 0px',
+        threshold: 0
+    });
 
-        var currHead;
-
-        Array.from(headers).forEach(function(h){
-            let headPos = h.getBoundingClientRect().top + window.scrollY - wh/2;
-
-            if (scrollPos > headPos) currHead = h;
-        });
-
-        Array.from(contents).forEach(function(c){
-            let contentPos = c.getBoundingClientRect().top + window.scrollY - wh;
-
-            if (c.classList.contains("appear")) return;
-
-            if (scrollPos < contentPos) return;
-
-            c.classList.add('appear');
-        });
-
-        if (currHead != undefined){
-            let tocLink = document.getElementById("toc-id-" + currHead.textContent);
-            tocLink.classList.add('active');
+    contents.forEach(c => {
+        if (!c.classList.contains('appear')) {
+            contentObserver.observe(c);
         }
-    }, 200);
+    });
+
+    const subjects = document.querySelectorAll('.subject');
+    const tocItems = tocbox.querySelectorAll('li');
+
+    const subjectObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                let header = entry.target.querySelector('.subject-name');
+                if (header) {
+                    tocItems.forEach(tocItem => {
+                        tocItem.classList.remove('active');
+                    });
+                    let tocLink = document.getElementById("toc-id-" + header.textContent);
+                    if (tocLink) {
+                        tocLink.classList.add('active');
+                    }
+                }
+            }
+        });
+    }, {
+        rootMargin: '-50% 0px -50% 0px'
+    });
+
+    subjects.forEach(subject => {
+        subjectObserver.observe(subject);
+    });
+
 });
