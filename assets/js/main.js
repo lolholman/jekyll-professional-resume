@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function(){
             c.classList.add('appear');
         });
 
-        if (currHead != undefined){
+        if (currHead !== undefined){
             let tocLink = document.getElementById("toc-id-" + currHead.textContent);
             tocLink.classList.add('active');
         }
